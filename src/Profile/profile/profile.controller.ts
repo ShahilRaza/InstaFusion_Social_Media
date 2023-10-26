@@ -35,10 +35,12 @@ export class ProfileController {
             }
         }
       }
-      return await this.UserprofileService.creatprofileservice({data,files,userId:req.user.userId})
+      return await this.UserprofileService.createProfileService({data,files,userId:req.user.userId})
     }
 
     /// get userprofile by id
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth('access-token')
     @Get(':id/getuserprofile')
     async findOne(@Param("id") id:string) {
     return await this.UserprofileService.getUserProfilename(id)
@@ -64,6 +66,8 @@ export class ProfileController {
 
  
      /// update userprofile
+     @UseGuards(AuthGuard('jwt'))
+     @ApiBearerAuth('access-token')
     @Put('/userprofileupdate/:id')
     @ApiConsumes('multipart/form-data')
     @UseInterceptors(FileFieldsInterceptor([
@@ -86,12 +90,16 @@ export class ProfileController {
     }
 
     /// delete profil by id
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth('access-token')
     @Delete('deleteprofilbyid/:id')
     async DeleteUserProfileById(@Param("id") id:string){
       return await this.UserprofileService.DeleteUserProfile(id)
     }
 
     /// userprofile search by userame and location
+    @UseGuards(AuthGuard('jwt'))
+    @ApiBearerAuth('access-token')
     @Post("/searchbyusernameandlocation")
     async SearchByUsernameAndLocation(@Query() data :SearchUserprofiledto){
      return await this.UserprofileService.SearchUserprofiles(data)

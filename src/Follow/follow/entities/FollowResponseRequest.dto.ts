@@ -8,10 +8,11 @@ export class FollowResponseDto {
 
     
     @ApiProperty({ required: false })
-    @IsArray()
-    @ArrayUnique() 
-    followingIds: string[];
-  
+    @IsNotEmpty()
+    followingId: string;
+
+
+    @ApiProperty({ required: false })
     @IsIn(['follow', 'unfollow'])
     status: string; 
   }

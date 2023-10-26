@@ -6,9 +6,12 @@ export class userfollowDto {
     @IsNotEmpty()
     followerId: string;
 
+    @ApiProperty({ required: false })
+    @IsNotEmpty()
+    followingIds: string;
+
     
     @ApiProperty({ required: false })
-    @IsArray()
-    @ArrayUnique() 
-    followingIds: string[];
+    @IsNotEmpty()
+    token: string;
 }

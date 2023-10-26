@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn, Unique, OneToOne, BeforeInsert } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn, Unique, OneToOne, BeforeInsert, JoinColumn } from 'typeorm';
 import { selectinterests } from './selectinterest.entities';
 import { User } from 'src/enitties/user.entities';
 
@@ -8,8 +8,12 @@ export class UserProfile {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column('uuid',{nullable:true})
+  @Column('uuid')
   userId:string;
+
+  @OneToOne(() => User, (user) => user.profile)
+  @JoinColumn({ name: 'user_id' }) 
+  user: User;
 
   @Column({ name: 'first_name' })
   fullname: string;

@@ -9,14 +9,12 @@ import { RefreshTokenDto } from '../dto/refresh-token.dto';
 import { CreateUserBySocialDto } from '../dto/userbysocialby.dto';
 import { UpdatePasswordDto } from '../dto/updatepassword.dto';
 import { AuthGuard } from '@nestjs/passport';
-//import { ApiBearerAuth } from './api-bearer.decorator';
 import { ApiBearerAuth, ApiCreatedResponse, ApiTags, ApiUnauthorizedResponse } from '@nestjs/swagger';
 import * as jwt from 'jsonwebtoken';
 import { ForgotPasswordLinkDto } from '../dto/forgotpassword.dto';
 import { ForgotpassworbytokenVerifiedDto } from '../dto/forgotpasswordbytoken.dto';
 import { phoneDto } from '../dto/phoneNumber.dto';
-//import { LoginResponseDto, UnAuthorisedResponseDto } from '../dto/login-response.dto';
-//import { Request } from 'express';
+
 
 
 
@@ -45,17 +43,9 @@ export class UsersController {
     @Post('login')
     async login(@Body() data: LoginDto,@Request() req) {
      return await this.userService.userlogin(data)
-   }
+     }
 
 
-
-  // @UseGuards(AuthGuard('local'))
-  // @Post('login')
-  // async login(@Body() data: LoginDto, @Request() req) {
-  //   return this.userService.userlogin(data)
-  // }
-
-   
    @Post('refresh-token')
    async refreshToken(@Body() req : RefreshTokenDto) {
     await this.userService.refresh(req)
@@ -100,7 +90,4 @@ export class UsersController {
     return this.userService.otpverifiedbynumber(data)
   }
   
-
-
-
 }
