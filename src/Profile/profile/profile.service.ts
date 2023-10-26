@@ -13,30 +13,44 @@ export class ProfileService {
      private readonly googleDriveService: GoogleDriveService,
     ){}
 
-
-    async creatprofileservice(rsdata){
-    const { fullname,username,bio,location}= rsdata.data
-    const fileurl = await this.googleDriveService.uploadfile(rsdata.files);
-    const usernameExting=await this.userprofileRepository.findOne({
-        where:{
-            username:username
+    async createProfileService(rsdata) {
+      const { fullname, username, bio, location } = rsdata.data;
+      const usernameExisting = await this.userprofileRepository.findOne({
+        where: {
+          username: ILike(`%${username}%`),
+        },
+        relations: ['user'], 
+      });
+      const usernameExistingForUser = await this.userprofileRepository.findOne({
+        where: {
+          username: username,
+          userId: rsdata.userId,
+        },
+      });
+      try {
+        if (!usernameExistingForUser) {
+          const fileUrl = await this.googleDriveService.uploadfile(rsdata.files);
+          return await this.userprofileRepository.save({
+            fullname: fullname,
+            username: username,
+            profilePicture: fileUrl,
+            bio: bio,
+            location: location,
+            userId: rsdata.userId,
+          })
+        } else if (!usernameExisting) {
+          const randomUsername = await this.GenerateRandomUsername(username);
+          throw new ConflictException(`Username '${username}' already exists. Please choose a different username or use the suggested username: '${randomUsername}'`);
+        } else {
+          throw new ConflictException(`Username '${username}' already exists for this user.`);
         }
-    })
-   
-    if(!usernameExting){
-      return  await this.userprofileRepository.save({
-        fullname:fullname,
-        username:username ,
-        profilePicture:fileurl ,
-        bio:bio ,
-        location:location,
-        userId:rsdata.userId  
-      })
-      
-    }else{
-        const randomusername = await this.GenerateRandomUsername(username)
-       throw new ConflictException(`Username '${username}' already exists. Please choose a different username or use the suggested username: '${randomusername}'`);
-    }
+      } catch (error) {
+        if (error.code === '23505') {
+          throw new ConflictException(`Username '${username}' already exists for this user.`);
+        } else {
+          throw error;
+        }
+      }
     }
 
     async GenerateRandomUsername(currentusername:string){
@@ -52,16 +66,12 @@ export class ProfileService {
 
 
     /// get userprofile service
-    async getUserProfilename(id): Promise<any>{
-      const userprofile= await this.userprofileRepository.findOne({
-        where:{
-          id:id
-        }
-      })
+    async getUserProfilename(id){
+      const userprofile= await this.userprofileRepository.findOne({where:{id:id}})
       if (!userprofile) {
         throw new HttpException('Profile not found', HttpStatus.NOT_FOUND);
       }else{
-        return   userprofile ;
+        return userprofile;
       }
     }
     
