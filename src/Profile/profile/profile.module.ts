@@ -9,12 +9,17 @@ import { GoogleDriveService } from '../../googledrivestorage.service';
 import { User } from '../../enitties/user.entities';
 import { UserFollow } from '../../Follow/follow/entities/userfollow.entities';
 
-
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserProfile,selectinterests, Hobbies,User, UserFollow]),
+    TypeOrmModule.forFeature([
+      UserProfile,
+      selectinterests,
+      Hobbies,
+      User,
+      UserFollow,
+    ]),
   ],
-  providers: [ProfileService,GoogleDriveService],
+  providers: [ProfileService, GoogleDriveService],
   controllers: [ProfileController],
 })
 export class ProfileModule {}

@@ -1,9 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, MaxLength } from 'class-validator';
+import {
+  IsArray,
+  IsDate,
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  MaxLength,
+} from 'class-validator';
 
 enum LocationVisibility {
-  Public = "Public",
-  Private = "Private"
+  Public = 'Public',
+  Private = 'Private',
 }
 
 export class userprofileDto {
@@ -31,5 +39,4 @@ export class userprofileDto {
   @ApiProperty({ required: false })
   @IsOptional()
   location: string;
-
 }

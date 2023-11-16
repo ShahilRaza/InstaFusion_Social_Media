@@ -1,4 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn, Unique, OneToOne, BeforeInsert, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Unique,
+  OneToOne,
+  BeforeInsert,
+  JoinColumn,
+} from 'typeorm';
 import { UserProfile } from './user-profile.entity';
 import { column } from 'mathjs';
 
@@ -15,5 +26,4 @@ export class Hobbies {
 
   @Column('jsonb', { nullable: true })
   education: string[];
-
 }

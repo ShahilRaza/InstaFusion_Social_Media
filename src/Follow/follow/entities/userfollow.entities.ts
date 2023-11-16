@@ -1,6 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn, Unique, OneToOne, BeforeInsert, ManyToOne, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Unique,
+  OneToOne,
+  BeforeInsert,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 import { User } from 'src/enitties/user.entities';
-
 
 @Entity({ name: 'Userfollow' })
 export class UserFollow {
@@ -16,7 +27,7 @@ export class UserFollow {
   following: User;
   @Column({ name: 'following_id' })
   followingId: string;
-  
+
   @Column({ default: 'rejected' })
   status: string;
 }

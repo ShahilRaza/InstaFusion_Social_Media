@@ -10,7 +10,6 @@ export class UserprofiledDto {
   @IsOptional()
   username: string;
 
-
   @ApiProperty({ type: 'string', format: 'binary', required: false })
   profile: any;
 
@@ -19,14 +18,10 @@ export class UserprofiledDto {
   @MaxLength(150)
   bio: string;
 
-
   @ApiProperty({ required: false })
   @IsOptional()
   location: string;
 
-
-  @ApiProperty({enum: ['public', 'private ']})
+  @ApiProperty({ enum: ['public', 'private '] })
   locationvisibility: string;
-
-  
 }
