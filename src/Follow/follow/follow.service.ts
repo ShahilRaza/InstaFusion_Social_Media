@@ -40,16 +40,23 @@ export class FollowService {
             followingId: followingId
           }
         })
-        if (userfollow.status='unfollow') {
-          const result = await this.userfollowrespository.update(
-            { followerId: userfollow.followerId, followingId: userfollow.followingId },
-            { status: status }
-          );
-          return{
-            message:'user follow request accept'
-          }
-        }else{
-          throw new HttpException('user follow request not acept',HttpStatus.BAD_REQUEST);
+        const result = await this.userfollowrespository.update(
+          { followerId: userfollow.followerId, followingId: userfollow.followingId },
+          { status: status }
+        );
+        let message;
+        switch (status){
+          case 'accept':
+          message='Accepted your request'
+          break;
+          case 'pending':
+          message='pending your request'
+          break;
+          default :
+          message='Reject your request'
+        }
+        return{
+         message: message 
         }
       }  
   }

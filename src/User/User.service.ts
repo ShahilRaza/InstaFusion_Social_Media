@@ -220,6 +220,7 @@ async forgetPassword(data: any) {
   if (!!user ) {
     user.token=randomToken
     await this.userRepository.save(user)
+    console.log(randomToken,"wnd  qdwo  ")
     return await this.emailConfirmationservice.sendVerificationLink({data,randomToken})
   }
 }

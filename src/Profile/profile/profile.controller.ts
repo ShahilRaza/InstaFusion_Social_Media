@@ -39,11 +39,11 @@ export class ProfileController {
     }
 
     /// get userprofile by id
-    @UseGuards(AuthGuard('jwt'))
-    @ApiBearerAuth('access-token')
+    // @UseGuards(AuthGuard('jwt'))
+    // @ApiBearerAuth('access-token')
     @Get(':id/getuserprofile')
     async findOne(@Param("id") id:string) {
-    return await this.UserprofileService.getUserProfilename(id)
+    return await this.UserprofileService.getUserProfile(id)
     }
 
 

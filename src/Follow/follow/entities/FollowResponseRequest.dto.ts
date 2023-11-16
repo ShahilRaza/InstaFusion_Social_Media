@@ -13,6 +13,6 @@ export class FollowResponseDto {
 
 
     @ApiProperty({ required: false })
-    @IsIn(['follow', 'unfollow'])
+    @IsIn(['accept', 'reject','pending'])
     status: string; 
   }
