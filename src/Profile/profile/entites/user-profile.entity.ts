@@ -1,7 +1,17 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn, Unique, OneToOne, BeforeInsert, JoinColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  CreateDateColumn,
+  UpdateDateColumn,
+  Unique,
+  OneToOne,
+  BeforeInsert,
+  JoinColumn,
+} from 'typeorm';
 import { selectinterests } from './selectinterest.entities';
 import { User } from 'src/enitties/user.entities';
-
 
 @Entity({ name: 'Userprofile' })
 export class UserProfile {
@@ -9,10 +19,10 @@ export class UserProfile {
   id: string;
 
   @Column('uuid')
-  userId:string;
+  userId: string;
 
   @OneToOne(() => User, (user) => user.profile)
-  @JoinColumn({ name: 'user_id' }) 
+  @JoinColumn({ name: 'user_id' })
   user: User;
 
   @Column({ name: 'first_name' })
@@ -25,20 +35,22 @@ export class UserProfile {
   profilePicture: string;
 
   @Column({ type: 'text', nullable: true })
-  bio: string; 
+  bio: string;
 
-  @OneToMany(() => selectinterests, ( selectinterestdata) =>  selectinterestdata.selectData)
+  @OneToMany(
+    () => selectinterests,
+    (selectinterestdata) => selectinterestdata.selectData,
+  )
   selectinterestdata: selectinterests[];
 
   @Column({ type: 'text', nullable: true })
   location: string[];
 
-  @Column({ type: 'enum', enum:["private","public"],default:"private"})
+  @Column({ type: 'enum', enum: ['private', 'public'], default: 'private' })
   locationvisibility: string;
 
   @Column({ type: 'date', nullable: true })
   dateOfBirth: Date;
-  
-  @CreateDateColumn({ name: 'created_at' }) 'created_at': Date;
 
+  @CreateDateColumn({ name: 'created_at' }) 'created_at': Date;
 }

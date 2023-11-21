@@ -11,16 +11,13 @@ import { RefreshToken } from '../enitties/Refresh-token.entity';
 import { JwtStrategy } from './jwt.strategy';
 import { EmailConfirmationService } from './emailConfirmation.service';
 import { UserProfile } from '../Profile/profile/entites/user-profile.entity';
-//import { LocalStrategy } from "passport-local"
-
-//import { Usertoken } from 'src/enitties/usertoken.entities';
 
 @Module({
   imports: [
     PassportModule.register({
-      defaultStrategy: "jwt",
+      defaultStrategy: 'jwt',
     }),
-    ConfigModule.forRoot(), 
+    ConfigModule.forRoot(),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -31,9 +28,9 @@ import { UserProfile } from '../Profile/profile/entites/user-profile.entity';
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([User,RefreshToken,UserProfile]),
+    TypeOrmModule.forFeature([User, RefreshToken, UserProfile]),
   ],
-  providers: [UsersService,MailService,JwtStrategy,EmailConfirmationService,],
+  providers: [UsersService, MailService, JwtStrategy, EmailConfirmationService],
   controllers: [UsersController],
 })
 export class UsersModule {}
