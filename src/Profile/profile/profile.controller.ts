@@ -65,11 +65,16 @@ export class ProfileController {
   }
 
   // get userprofile by id
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
+  // @UseGuards(AuthGuard('jwt'))
+  // @ApiBearerAuth('access-token')
   @Get(':id/getuserprofile')
   async findOne(@Param('id') id: string) {
     return await this.UserprofileService.getUserProfile(id);
+  }
+
+  @Get('getfollowingprofiles/:id')
+  async getfollowingprofiles(@Param('id') id: string, @Query('viewerId') viewerId: string) {
+    return await this.UserprofileService.getFollowingProfile({id,viewerId})
   }
 
   @Get('getalluserprofile')

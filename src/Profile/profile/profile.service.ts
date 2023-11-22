@@ -17,6 +17,8 @@ import { forEach } from 'mathjs';
 import { any, array } from 'joi';
 import { ids, ids_v1 } from 'googleapis/build/src/apis/ids';
 import { ideahub } from 'googleapis/build/src/apis/ideahub';
+import { promises } from 'dns';
+import { error } from 'console';
 
 @Injectable()
 export class ProfileService {
@@ -87,50 +89,56 @@ export class ProfileService {
   }
 
   async getUserProfile(id: string) {
-    const userprofile = await this.userprofileRepository.findOne({
-      where: {
-        userId: id,
-      },
-      relations: { user: { followers: true } },
-    });
-    const { followers } = userprofile.user;
-    let follower = [];
-    let followerCount = 0;
-    let following = 0;
-    followers.forEach((followstatus) => {
-      if (followstatus.status == 'accept') {
-        followerCount++;
-        follower.push(followstatus.followingId);
-      } else if (
-        followstatus.status === 'pending' ||
-        followstatus.status === 'reject'
-      ) {
-        following++;
-      }
-    });
-    const idsToFetch = [...follower, id];
-    const profileDataPromises = idsToFetch.map(async (userId) => {
-      const profileData = await this.userprofileRepository.findOne({
+   const userprofileExist=await this.userprofileRepository.findOne({
+    where:{
+      id:id
+    }
+   })
+   if (!userprofileExist) {
+    throw new NotFoundException(`User with ID "${id}" not found`);
+   }else{
+    return userprofileExist
+   }
+  }
+
+
+  async getFollowingProfile(data) {
+    try {
+      const { id, viewerId } = data;
+      const userprofiles = await this.userfollowrespository.find({
         where: {
-          userId,
+          followerId: id,
         },
       });
-      return profileData;
-    });
-    const profiles = await Promise.all(profileDataPromises);
-    for (let i = 0; i < profiles.length; i++) {
-      for (let j = profiles.length - 1; j > i; j--) {
-        if (profiles[j].userId < profiles[j - 1].userId) {
-          [profiles[j], profiles[j - 1]] = [profiles[j - 1], profiles[j]];
-        }
+  
+      if (!userprofiles || userprofiles.length === 0) {
+        throw new NotFoundException(`The user with ID ${id} has no follow requests.`);
       }
+      const followingProfiles = await Promise.all(
+        userprofiles.map(async (followstatus) => ({
+          userProfile:
+            followstatus.status === 'accept' && followstatus.followingId === viewerId
+              ? await this.userprofileRepository.findOne({
+                  where: {
+                    userId: followstatus.followingId,
+                  },
+                })
+              : null,
+          message:
+            followstatus.status === 'reject' || followstatus.status === 'pending'
+              ? 'This account is private.'
+              : null,
+        }))
+      );
+      return followingProfiles.filter((profile) => profile.userProfile !== null).length > 0
+        ? followingProfiles.filter((profile) => profile.userProfile !== null)
+        : [{ userProfile: null, message: 'This account is private.' }];
+    } catch (error) {
+      throw new NotFoundException(`Error fetching following profiles: ${error.message}`);
     }
-    return {
-      profiles,
-      followerCount,
-      following,
-    };
   }
+
+
 
   async getAllUserProfiles(getprivate) {
     let locationVisibility =
