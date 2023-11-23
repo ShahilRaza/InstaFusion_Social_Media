@@ -89,18 +89,17 @@ export class ProfileService {
   }
 
   async getUserProfile(id: string) {
-   const userprofileExist=await this.userprofileRepository.findOne({
-    where:{
-      id:id
+    const userprofileExist = await this.userprofileRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
+    if (!userprofileExist) {
+      throw new NotFoundException(`User with ID "${id}" not found`);
+    } else {
+      return userprofileExist;
     }
-   })
-   if (!userprofileExist) {
-    throw new NotFoundException(`User with ID "${id}" not found`);
-   }else{
-    return userprofileExist
-   }
   }
-
 
   async getFollowingProfile(data) {
     try {
@@ -110,33 +109,41 @@ export class ProfileService {
           followerId: id,
         },
       });
-  
+
       if (!userprofiles || userprofiles.length === 0) {
-        throw new NotFoundException(`The user with ID ${id} has no follow requests.`);
+        throw new NotFoundException(
+          `The user with ID ${id} has no follow requests.`,
+        );
       }
       const followingProfiles = await Promise.all(
-        userprofiles.map(async (followstatus)=>({
-          userprofile : followstatus.status==="accept" && followstatus.followingId===viewerId ? 
-            await this.userprofileRepository.findOne({
-              where:{
-                userId: followstatus.followingId,
-              }
-            })
-            :null,
-          message: followstatus.status==="reject" || followstatus.status === 'pending' 
-           ? 'This account is private.'
-           : null,
-          })
-        ))
-       return followingProfiles.filter((profiles)=>profiles.userprofile!==null).length>0
-       ? followingProfiles.filter((profile)=>profile.userprofile!==null)
-       : [{ userProfile: null, message: 'This account is private.' }];
-     } catch (error) {
-    throw new NotFoundException(`Error fetching following profiles: ${error.message}`);
-     }
+        userprofiles.map(async (followstatus) => ({
+          userprofile:
+            followstatus.status === 'accept' &&
+            followstatus.followingId === viewerId
+              ? await this.userprofileRepository.findOne({
+                  where: {
+                    userId: followstatus.followingId,
+                  },
+                })
+              : null,
+          message:
+            followstatus.status === 'reject' ||
+            followstatus.status === 'pending'
+              ? 'This account is private.'
+              : null,
+        })),
+      );
+      return followingProfiles.filter(
+        (profiles) => profiles.userprofile !== null,
+      ).length > 0
+        ? followingProfiles.filter((profile) => profile.userprofile !== null)
+        : [{ userProfile: null, message: 'This account is private.' }];
+    } catch (error) {
+      throw new NotFoundException(
+        `Error fetching following profiles: ${error.message}`,
+      );
+    }
   }
-
-
 
   async getAllUserProfiles(getprivate) {
     let locationVisibility =

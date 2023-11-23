@@ -64,7 +64,6 @@ export class ProfileController {
     });
   }
 
-  
   @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth('access-token')
   @Get(':id/getuserprofile')
@@ -135,10 +134,12 @@ export class ProfileController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')  
+  @ApiBearerAuth('access-token')
   @Get('getfollowingprofiles/:id')
-  async getfollowingprofiles(@Param('id') id: string, @Query('viewerId') viewerId: string) {
-    return await this.UserprofileService.getFollowingProfile({id,viewerId})
+  async getfollowingprofiles(
+    @Param('id') id: string,
+    @Query('viewerId') viewerId: string,
+  ) {
+    return await this.UserprofileService.getFollowingProfile({ id, viewerId });
   }
- 
 }
