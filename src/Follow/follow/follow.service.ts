@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserFollow } from './entities/userfollow.entities';
 import { Repository } from 'typeorm';
@@ -67,6 +72,33 @@ export class FollowService {
     }
     return {
       message: message,
+    };
+  }
+
+  async CountFollowerAndFollowing(data) {
+    let follower = 0;
+    let following = 0;
+    const followRequestExits = await this.userfollowrespository.find({
+      where: {
+        followerId: data.id,
+      },
+    });
+    if (followRequestExits.length === 0 || !followRequestExits) {
+      throw new NotFoundException('not fount follow request this ID');
+    }
+    const followRequestSatus = await Promise.all(
+      followRequestExits.map((followstatus) => followstatus.status),
+    );
+    followRequestSatus.forEach((status) => {
+      if (status === 'accept') {
+        following++;
+      } else if (['reject', 'pending'].includes(status)) {
+        follower++;
+      }
+    });
+    return {
+      follower: follower,
+      following: following,
     };
   }
 }

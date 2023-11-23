@@ -18,7 +18,7 @@ import { any, array } from 'joi';
 import { ids, ids_v1 } from 'googleapis/build/src/apis/ids';
 import { ideahub } from 'googleapis/build/src/apis/ideahub';
 import { promises } from 'dns';
-import { error } from 'console';
+import { error, profile } from 'console';
 
 @Injectable()
 export class ProfileService {
@@ -115,27 +115,25 @@ export class ProfileService {
         throw new NotFoundException(`The user with ID ${id} has no follow requests.`);
       }
       const followingProfiles = await Promise.all(
-        userprofiles.map(async (followstatus) => ({
-          userProfile:
-            followstatus.status === 'accept' && followstatus.followingId === viewerId
-              ? await this.userprofileRepository.findOne({
-                  where: {
-                    userId: followstatus.followingId,
-                  },
-                })
-              : null,
-          message:
-            followstatus.status === 'reject' || followstatus.status === 'pending'
-              ? 'This account is private.'
-              : null,
-        }))
-      );
-      return followingProfiles.filter((profile) => profile.userProfile !== null).length > 0
-        ? followingProfiles.filter((profile) => profile.userProfile !== null)
-        : [{ userProfile: null, message: 'This account is private.' }];
-    } catch (error) {
-      throw new NotFoundException(`Error fetching following profiles: ${error.message}`);
-    }
+        userprofiles.map(async (followstatus)=>({
+          userprofile : followstatus.status==="accept" && followstatus.followingId===viewerId ? 
+            await this.userprofileRepository.findOne({
+              where:{
+                userId: followstatus.followingId,
+              }
+            })
+            :null,
+          message: followstatus.status==="reject" || followstatus.status === 'pending' 
+           ? 'This account is private.'
+           : null,
+          })
+        ))
+       return followingProfiles.filter((profiles)=>profiles.userprofile!==null).length>0
+       ? followingProfiles.filter((profile)=>profile.userprofile!==null)
+       : [{ userProfile: null, message: 'This account is private.' }];
+     } catch (error) {
+    throw new NotFoundException(`Error fetching following profiles: ${error.message}`);
+     }
   }
 
 

@@ -72,14 +72,6 @@ export class ProfileController {
     return await this.UserprofileService.getUserProfile(id);
   }
 
-
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')  
-  @Get('getfollowingprofiles/:id')
-  async getfollowingprofiles(@Param('id') id: string, @Query('viewerId') viewerId: string) {
-    return await this.UserprofileService.getFollowingProfile({id,viewerId})
-  }
-
   @Get('getalluserprofile')
   async getalluserprofile(@Headers('authorization') authorizationHeader) {
     let getprivate = false;
@@ -141,4 +133,12 @@ export class ProfileController {
   async SearchByUsernameAndLocation(@Query() data: SearchUserprofiledto) {
     return await this.UserprofileService.SearchUserprofiles(data);
   }
+
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')  
+  @Get('getfollowingprofiles/:id')
+  async getfollowingprofiles(@Param('id') id: string, @Query('viewerId') viewerId: string) {
+    return await this.UserprofileService.getFollowingProfile({id,viewerId})
+  }
+ 
 }
