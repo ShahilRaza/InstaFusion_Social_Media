@@ -12,6 +12,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from 'src/enitties/user.entities';
+import { DeviceToken } from '../../../Notification-system/notification/entities/device-token.entity';
 
 @Entity({ name: 'Userfollow' })
 export class UserFollow {
@@ -20,14 +21,18 @@ export class UserFollow {
 
   @ManyToOne(() => User, (user) => user.followers)
   follower: User;
-  @Column({ name: 'follower_id' })
-  followerId: string;
 
-  @ManyToOne(() => User, (user) => user.following)
-  following: User;
   @Column({ name: 'following_id' })
   followingId: string;
 
-  @Column({ default: 'rejected' })
+  @ManyToOne(() => User, (user) => user.following)
+  following: User;
+  
+  @Column({ name: 'follower_id' }) 
+  followerId: string;
+
+  @Column({ default: 'pending' })
   status: string;
+
+  
 }

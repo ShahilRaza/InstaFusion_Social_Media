@@ -10,8 +10,5 @@ export class userfollowDto {
     @IsNotEmpty()
     followingIds: string;
 
-    
-    @ApiProperty({ required: false })
-    @IsNotEmpty()
-    token: string;
+ 
 }
