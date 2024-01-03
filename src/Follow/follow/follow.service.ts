@@ -22,7 +22,7 @@ export class FollowService {
   ) {}
 
   async userfollow(data) {
-    const { followerId, followingIds, token: userToken } = data;
+    const { followerId, followingIds} = data;
     const requestExisting = await this.userfollowrespository.findOne({
       where: { followerId: followerId, followingId: followingIds },
     });
@@ -31,11 +31,6 @@ export class FollowService {
         followerId: followerId,
         followingId: followingIds,
       });
-      await this.notificationService.sendNotification(
-        userToken,
-        'Follow',
-        'You have new followers',
-      );
     } else {
       throw new HttpException(
         'Already sent request Following',

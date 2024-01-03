@@ -18,10 +18,11 @@ import { AuthGuard } from '@nestjs/passport';
 export class FollowController {
   constructor(private readonly userfollowService: FollowService) {}
 
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
+  // @UseGuards(AuthGuard('jwt'))
+  // @ApiBearerAuth('access-token')
   @Post('/Followsuser')
   async follow(@Body() data: userfollowDto) {
+    console.log(data)
     return await this.userfollowService.userfollow(data);
   }
 

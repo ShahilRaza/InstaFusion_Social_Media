@@ -1,32 +1,55 @@
-import { Injectable } from '@nestjs/common';
-import { admin } from '../notification/firebase-admine.provider';
+import { ConflictException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import * as admin from 'firebase-admin';
+import { Repository } from 'typeorm';
+import { DeviceToken } from './entities/device-token.entity';
+import { UserFollow } from '../../Follow/follow/entities/userfollow.entities';
 
 @Injectable()
 export class NotificationService {
-  constructor() {}
+  constructor(
+    @InjectRepository(DeviceToken)
+    private readonly DeviceTokenRespository: Repository<DeviceToken>,
+    @InjectRepository(UserFollow)
+    private readonly userfollowrespository: Repository<UserFollow>,
+  ) {}
 
-  async sendNotification(token: string, topic: string, message: string) {
-    const notification = {
-      notification: {
-        title: 'Notification Title',
-        body: message,
-      },
-    };
-    try {
-      const response = await admin.messaging().send({
-        token,
-      });
-      return {
-        success: true,
-        data: response,
-        message: 'Notification sent',
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error,
-        message: 'Failed to send notification',
-      };
+  async registerToken(data) {
+    const { senderId, token } = data;
+    const followTable = await this.userfollowrespository.find({
+      where: { followerId: senderId },
+    });
+  
+    if (followTable && followTable.length > 0) {
+      for (const followRecord of followTable) {
+        const recipientId = followRecord.followingId;
+        const senderIdExists = await this.DeviceTokenRespository.findOne({
+          where: { senderId: senderId },
+        });
+        if (!senderIdExists) {
+          const result = await this.DeviceTokenRespository.save({
+            token: token,
+            senderId: senderId,
+            recipientId: recipientId,
+          });
+          return {
+            message: 'DeviceToken saved successfully',
+            data: result,
+          };
+        } else {
+          throw new ConflictException(
+            `DeviceToken for senderId ${senderId} already exists.`,
+          );
+        }
+      }
     }
+  }
+
+
+  async sendNotification(data) {
+    let result = await admin
+      .messaging()
+      .sendToDevice(data.fcmtoken, data.payload);
+    return result;
   }
 }

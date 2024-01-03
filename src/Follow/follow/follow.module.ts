@@ -5,10 +5,11 @@ import { FollowController } from './follow.controller';
 import { UserFollow } from './entities/userfollow.entities';
 import { User } from '../../enitties/user.entities';
 import { NotificationService } from '../../Notification-system/notification/notification.service';
+import { DeviceToken } from '../../Notification-system/notification/entities/device-token.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UserFollow,User]),
+    TypeOrmModule.forFeature([UserFollow,User,DeviceToken]),
   ],
   providers: [FollowService,NotificationService],
   controllers: [ FollowController ],
