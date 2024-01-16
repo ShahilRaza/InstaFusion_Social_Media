@@ -4,6 +4,7 @@ import * as admin from 'firebase-admin';
 import { Repository } from 'typeorm';
 import { DeviceToken } from './entities/device-token.entity';
 import { UserFollow } from '../../Follow/follow/entities/userfollow.entities';
+import { Console } from 'console';
 
 @Injectable()
 export class NotificationService {
@@ -15,11 +16,11 @@ export class NotificationService {
   ) {}
 
   async registerToken(data) {
+    console.log(data)
     const { senderId, token } = data;
     const followTable = await this.userfollowrespository.find({
       where: { followerId: senderId },
     });
-  
     if (followTable && followTable.length > 0) {
       for (const followRecord of followTable) {
         const recipientId = followRecord.followingId;
@@ -33,9 +34,9 @@ export class NotificationService {
             recipientId: recipientId,
           });
           return {
-            message: 'DeviceToken saved successfully',
-            data: result,
-          };
+            statusCode: 201,
+            message: `Successfully registered the device token`,
+          }
         } else {
           throw new ConflictException(
             `DeviceToken for senderId ${senderId} already exists.`,
@@ -45,11 +46,12 @@ export class NotificationService {
     }
   }
 
-
   async sendNotification(data) {
     let result = await admin
       .messaging()
       .sendToDevice(data.fcmtoken, data.payload);
     return result;
   }
+
+  
 }

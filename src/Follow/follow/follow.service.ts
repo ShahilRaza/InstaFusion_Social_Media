@@ -31,6 +31,9 @@ export class FollowService {
         followerId: followerId,
         followingId: followingIds,
       });
+      return {
+        message:"sent follow request "
+      }
     } else {
       throw new HttpException(
         'Already sent request Following',

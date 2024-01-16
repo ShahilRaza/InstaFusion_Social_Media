@@ -26,6 +26,13 @@ export class PushNotificationsController {
     return await this.notification.registerToken(data);
   }
 
+
+  @Get('register-token')
+  async getregisterToken(@Body() data: SaveTokenDto) {
+    return await this.notification.registerToken(data);
+  }
+
+
   @Post('send')
   async sendNotification(@Body() data: NotificationTokenDto) {
     return await this.notification.sendNotification(data);
