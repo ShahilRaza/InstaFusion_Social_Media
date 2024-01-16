@@ -22,7 +22,6 @@ export class FollowController {
   // @ApiBearerAuth('access-token')
   @Post('/Followsuser')
   async follow(@Body() data: userfollowDto) {
-    console.log(data)
     return await this.userfollowService.userfollow(data);
   }
 
