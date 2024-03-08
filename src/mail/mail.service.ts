@@ -12,10 +12,9 @@ export class MailService {
           to: email,
           from: process.env.MAIL_FROM,
           subject: "Email Verification for instafusion",
-          template: 'emailVerification.hbs',
+          template: "D:\\InstaFusion_Social_Media-master\\InstaFusion_Social_Media\\dist\\mail\\templates\\emailVerification.hbs",
           context: { token }, 
         });
-        console.log('Email sent successfully');
         return { success: true, message: 'Email sent successfully' };
       } catch (error) {
         console.error('Error sending email:', error);
