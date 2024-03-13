@@ -13,6 +13,7 @@ import { MailModule } from './mail/mail.module';
 import { ProfileModule } from './Profile/profile/profile.module';
 import { FollowModule } from './Follow/follow/follow.module';
 import { NotificationModule } from './Notification-system/notification/notification.module';
+import { PostModule } from './Post-system/post/post.module';
 //import { AuthModule } from './auth/auth.module';
 
 const transport = pino.transport({
@@ -46,6 +47,7 @@ const logger = pino(transport);
     FollowModule,
     ProfileModule,
     NotificationModule,
+    PostModule,
     LoggerModule.forRoot({
       pinoHttp: {
         logger,        
