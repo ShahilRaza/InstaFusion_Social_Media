@@ -5,6 +5,8 @@ import { Repository } from 'typeorm';
 import { DeviceToken } from './entities/device-token.entity';
 import { UserFollow } from '../../Follow/follow/entities/userfollow.entities';
 import { Console } from 'console';
+//import {  TwilioService } from 'nestjs-twilio';
+import * as twilio from 'twilio';
 
 @Injectable()
 export class NotificationService {
@@ -16,7 +18,7 @@ export class NotificationService {
   ) {}
 
   async registerToken(data) {
-    console.log(data)
+    console.log(data);
     const { senderId, token } = data;
     const followTable = await this.userfollowrespository.find({
       where: { followerId: senderId },
@@ -36,7 +38,7 @@ export class NotificationService {
           return {
             statusCode: 201,
             message: `Successfully registered the device token`,
-          }
+          };
         } else {
           throw new ConflictException(
             `DeviceToken for senderId ${senderId} already exists.`,
@@ -46,12 +48,38 @@ export class NotificationService {
     }
   }
 
-  async sendNotification(data) {
-    let result = await admin
-      .messaging()
-      .sendToDevice(data.fcmtoken, data.payload);
-    return result;
+  async sendNotification(data: any) {
+    try {
+      const client = twilio(
+        process.env.TWILIO_ACCOUNT_SID,
+        process.env.TWILIO_AUTH_TOKEN,
+      );
+      const message = await client.messages.create({
+        body: `this user want to be follow ${data}`,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: '+917505234970',
+      });
+      return message;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  
+  async sendResponseNotification(data: any) {
+    const { firstName, lastName } = data;
+    try {
+      const client = twilio(
+        process.env.TWILIO_ACCOUNT_SID,
+        process.env.TWILIO_AUTH_TOKEN,
+      );
+      const message = await client.messages.create({
+        body: `this user start following  ${firstName} ${lastName}`,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: '+917505234970',
+      });
+      return message;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

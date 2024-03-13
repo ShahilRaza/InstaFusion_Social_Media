@@ -22,17 +22,15 @@ export class UserFollow {
   @ManyToOne(() => User, (user) => user.followers)
   follower: User;
 
+  @Column({ name: 'follower_id' })
+  followerId: string;
+
   @Column({ name: 'following_id' })
   followingId: string;
 
   @ManyToOne(() => User, (user) => user.following)
   following: User;
-  
-  @Column({ name: 'follower_id' }) 
-  followerId: string;
 
   @Column({ default: 'pending' })
   status: string;
-
-  
 }
