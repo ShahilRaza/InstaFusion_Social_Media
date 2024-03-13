@@ -16,6 +16,7 @@ import {
 import { UserProfile } from '../Profile/profile/entites/user-profile.entity';
 import { userprofileDto } from 'src/Profile/profile/profileDto/userprofile.dto';
 import { UserFollow } from 'src/Follow/follow/entities/userfollow.entities';
+import { CaptionEntities } from 'src/Post-system/PostEntities/caption.entities';
 
 @Entity({ name: 'users' })
 export class User {
@@ -51,6 +52,9 @@ export class User {
 
   @OneToMany(() => UserFollow, (userFollow) => userFollow.following)
   following: UserFollow[];
+
+  @OneToMany(()=> CaptionEntities,(caption)=>caption.creator)
+  captions :CaptionEntities[]
 
   @CreateDateColumn({ name: 'created_at' }) 'created_at': Date;
 
