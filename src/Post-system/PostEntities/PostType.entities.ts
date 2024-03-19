@@ -9,6 +9,6 @@ export class PostType {
   @Column({ name: 'post_typeName' })
   postTypeName: string;
 
-  @OneToMany(() => CaptionEntities, (captions) => captions)
+  @OneToMany(() => CaptionEntities, (captions) => captions.postType)
   captions: CaptionEntities[];
 }

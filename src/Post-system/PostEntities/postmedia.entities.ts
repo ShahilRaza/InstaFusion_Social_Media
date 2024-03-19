@@ -21,8 +21,8 @@ export class PostMediaEntities {
   @Column()
   position: string;
 
-  @Column()
-  postFilter: string;
+  @Column({ nullable: true })
+  postFilter: string
 
   @Column()
   longitude: number;
