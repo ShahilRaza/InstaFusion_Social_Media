@@ -8,6 +8,7 @@ import { PostEffect } from '../PostEntities/posteffect.entities';
 import { effectEntities } from '../PostEntities/effect.entities';
 import { PostType } from '../PostEntities/PostType.entities';
 import { User } from '../../enitties/user.entities';
+import { GoogleDriveService } from '../../googledrivestorage.service';
 
 @Module({
    imports:[ TypeOrmModule.forFeature([
@@ -19,7 +20,7 @@ import { User } from '../../enitties/user.entities';
       User 
    ]),],
    controllers:[PostController],
-   providers:[PostService],
+   providers:[PostService,GoogleDriveService],
    exports:[]
 })
 export class PostModule {}
