@@ -44,8 +44,8 @@ export class PostController {
     return this.postService.createcaption(data);
   }
 
-  // @UseGuards(AuthGuard('jwt'))
-  // @ApiBearerAuth('access-token')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
   @Post('createpostmedia')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'mediaFile', maxCount: 10 }]))
