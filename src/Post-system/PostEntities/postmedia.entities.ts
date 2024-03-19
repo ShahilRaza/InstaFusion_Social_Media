@@ -30,7 +30,7 @@ export class PostMediaEntities {
   @Column()
   latitude: number;
 
-  @ManyToOne(() => CaptionEntities, (caption) => caption.PostMedia)
+  @ManyToOne(() => CaptionEntities, (caption) => caption.PostMedia,{onDelete: "CASCADE"})
   @JoinColumn({ name: 'postId' })
   caption: CaptionEntities;
 }
