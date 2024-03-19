@@ -9,6 +9,7 @@ import { effectEntities } from '../PostEntities/effect.entities';
 import { PostType } from '../PostEntities/PostType.entities';
 import { User } from '../../enitties/user.entities';
 import { GoogleDriveService } from '../../googledrivestorage.service';
+import { UserFollow } from '../../Follow/follow/entities/userfollow.entities';
 
 @Module({
    imports:[ TypeOrmModule.forFeature([
@@ -17,7 +18,8 @@ import { GoogleDriveService } from '../../googledrivestorage.service';
       PostEffect,
       effectEntities,
       PostType,
-      User 
+      User,
+      UserFollow 
    ]),],
    controllers:[PostController],
    providers:[PostService,GoogleDriveService],

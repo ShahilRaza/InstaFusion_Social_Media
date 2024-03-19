@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpException,
   HttpStatus,
@@ -43,8 +44,8 @@ export class PostController {
     return this.postService.createcaption(data);
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @ApiBearerAuth('access-token')
+  // @UseGuards(AuthGuard('jwt'))
+  // @ApiBearerAuth('access-token')
   @Post('createpostmedia')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileFieldsInterceptor([{ name: 'mediaFile', maxCount: 10 }]))
@@ -87,5 +88,17 @@ export class PostController {
   @Put('updatecaptionbypoststypeId')
   async updateCaptionPostTypes(@Body() data: updateCaptionDto) {
     return this.postService.updatecaptions(data);
+  }
+
+  @Delete('captions/postTypeId:id')
+  async deleteCaption(@Query('id') id: string) {
+    return this.postService.Delete(id);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
+  @Get('acceptprofileviewrequests:id')
+  async acceptProfileViewRequests(@Query('id') id: string) {
+    return this.postService.viewsProfileRequestAccept(id);
   }
 }

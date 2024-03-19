@@ -1,12 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadGatewayException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CaptionEntities } from '../PostEntities/caption.entities';
 import { Repository } from 'typeorm';
 import { User } from '../../enitties/user.entities';
 import { PostType } from '../PostEntities/PostType.entities';
-import { Console } from 'console';
+import { Console, log } from 'console';
 import { GoogleDriveService } from '../../googledrivestorage.service';
 import { PostMediaEntities } from '../PostEntities/postmedia.entities';
+import { UserFollow } from '../../Follow/follow/entities/userfollow.entities';
 
 @Injectable()
 export class PostService {
@@ -19,6 +24,8 @@ export class PostService {
     private readonly PostMediaRepository: Repository<PostMediaEntities>,
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly googleDriveService: GoogleDriveService,
+    @InjectRepository(UserFollow)
+    private readonly userfollowrespository: Repository<UserFollow>,
   ) {}
 
   async createpostype(data: any) {
@@ -102,6 +109,64 @@ export class PostService {
           return `unable to update caption`;
         }
       }
+    }
+  }
+
+  async Delete(id: any) {
+    const captionsData = await this.PostTypeRepository.findOne({
+      where: {
+        id: id,
+      },
+      relations: ['captions'],
+    });
+    if (captionsData.captions.length > 0) {
+      for (const caption of captionsData.captions) {
+        const result = await this.CaptionRepository.delete({
+          id: caption.id,
+        });
+        if (result.affected === 1) {
+          return 'Deleted Successfully';
+        } else {
+          return 'Unable To Delete';
+        }
+      }
+    }
+  }
+
+  async viewsProfileRequestAccept(id: string) {
+    let userdetails = await this.userfollowrespository.findOne({
+      where: {
+        followingId: id,
+      },
+      relations: ['following'],
+    });
+    const { followerId, status } = userdetails;
+    if (status == 'accept') {
+      let userdetails = await this.userRepository.findOne({
+        where: {
+          id: followerId,
+        },
+        relations: ['profile', 'captions.PostMedia'],
+      });
+      if (!userdetails) {
+        throw new NotFoundException('User not found');
+      }
+      let mediafiles: any = [];
+      const { profile, captions } = userdetails;
+      const mediaFiles = captions.flatMap((caption) =>
+        caption.PostMedia.map((media) => media.mediaFile),
+      );
+      const { username, bio, profilePicture } = <any>profile;
+      return {
+        username: username,
+        bio: bio,
+        profilePicture: profilePicture,
+        mediaFiles: mediaFiles,
+      };
+    } else if (['pending', 'reject'].includes(status)) {
+      throw new BadGatewayException(
+        "You don't have permission to view this profile. Please accept requests from users.",
+      );
     }
   }
 }
