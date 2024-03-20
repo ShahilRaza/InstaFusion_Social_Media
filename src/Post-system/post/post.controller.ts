@@ -101,4 +101,21 @@ export class PostController {
   async acceptProfileViewRequests(@Query('id') id: string) {
     return this.postService.viewsProfileRequestAccept(id);
   }
+
+
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
+  @Get('count-follower-posts/:id')
+  async counstfollowerposts(@Query('id') id: string) {
+    return this.postService.countsFollowerPost(id)
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth('access-token')
+  @Get('views-request-accept-counst-followerposts/:id')
+  async viewsrequestacceptcounstfollowerposts(@Query('id') id: string) {
+    return this.postService.viewsRequestAccept(id)
+  }
+
+
 }

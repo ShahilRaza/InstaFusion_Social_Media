@@ -12,6 +12,7 @@ import { Console, log } from 'console';
 import { GoogleDriveService } from '../../googledrivestorage.service';
 import { PostMediaEntities } from '../PostEntities/postmedia.entities';
 import { UserFollow } from '../../Follow/follow/entities/userfollow.entities';
+import { ideahub_v1beta } from 'googleapis';
 
 @Injectable()
 export class PostService {
@@ -168,5 +169,55 @@ export class PostService {
         "You don't have permission to view this profile. Please accept requests from users.",
       );
     }
+  }
+
+  async countsFollowerPost(data: any) {
+    const userdata = await this.userRepository.findOne({
+      where: { id: data },
+      relations: ['followers', 'captions.PostMedia'],
+    });
+    if (!userdata) {
+      throw new Error('User data not found');
+    }
+    let follower = 0;
+    let following = 0;
+    userdata.followers.forEach((item) => {
+      if (item.status === 'accept') {
+        follower++;
+      } else if (['pending', 'reject'].includes(item.status)) {
+        following++;
+      }
+    });
+    const mediaCount = userdata.captions
+      .flat(1)
+      .reduce(
+        (count, captionEntity) => count + captionEntity.PostMedia.length,
+        0,
+      );
+
+    return { follower, following, mediaCount };
+  }
+
+  async viewsRequestAccept(data: any) {
+    let followerData = await this.userfollowrespository.find({
+      where: {
+        followingId: data,
+      },
+      relations: ['follower.captions.PostMedia'],
+    });
+    const followerCounts = await Promise.all(
+      followerData.map(async (item) => {
+        if (item.status === 'accept') {
+          const followerId = item.followerId;
+          const followerCount = await this.countsFollowerPost(followerId);
+          return followerCount;
+        } else if (['pending', 'reject'].includes(item.status)) {
+          throw new BadGatewayException(
+            "You don't have permission to view this profile. Please accept requests from users.",
+          );
+        }
+      }),
+    );
+    return followerCounts;
   }
 }
