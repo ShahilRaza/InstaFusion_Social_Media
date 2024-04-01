@@ -9,6 +9,7 @@ import {
 } from 'typeorm';
 import { PostMediaEntities } from './postmedia.entities';
 import { PostType } from './PostType.entities';
+import { CommentEntities } from '../../Comment-Like-System/comment-like/Comment-like-Entities/comment-like.entities';
 
 @Entity({ name: 'CaptionEntities' })
 export class CaptionEntities {
@@ -37,4 +38,7 @@ export class CaptionEntities {
   @ManyToOne(() => PostType, (postType) => postType.captions)
   @JoinColumn({ name: 'postTypeId' })
   postType: PostType;
+
+  @OneToMany(()=>  CommentEntities , comment=>comment)
+  comments :CommentEntities[]
 }

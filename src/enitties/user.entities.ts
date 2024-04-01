@@ -17,6 +17,7 @@ import { UserProfile } from '../Profile/profile/entites/user-profile.entity';
 import { userprofileDto } from 'src/Profile/profile/profileDto/userprofile.dto';
 import { UserFollow } from 'src/Follow/follow/entities/userfollow.entities';
 import { CaptionEntities } from 'src/Post-system/PostEntities/caption.entities';
+import { CommentEntities } from 'src/Comment-Like-System/comment-like/Comment-like-Entities/comment-like.entities';
 
 @Entity({ name: 'users' })
 export class User {
@@ -59,4 +60,8 @@ export class User {
   @CreateDateColumn({ name: 'created_at' }) 'created_at': Date;
 
   @UpdateDateColumn({ name: 'updated_at' }) 'updated_at': Date;
+
+
+  @OneToMany(()=>CommentEntities,(commentdata)=>commentdata)
+  comments: CommentEntities[]
 }

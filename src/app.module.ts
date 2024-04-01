@@ -14,6 +14,7 @@ import { ProfileModule } from './Profile/profile/profile.module';
 import { FollowModule } from './Follow/follow/follow.module';
 import { NotificationModule } from './Notification-system/notification/notification.module';
 import { PostModule } from './Post-system/post/post.module';
+import { CommentLikeModule } from './Comment-Like-System/comment-like/comment-like.module';
 //import { AuthModule } from './auth/auth.module';
 
 const transport = pino.transport({
@@ -48,6 +49,7 @@ const logger = pino(transport);
     ProfileModule,
     NotificationModule,
     PostModule,
+    CommentLikeModule,
     LoggerModule.forRoot({
       pinoHttp: {
         logger,        

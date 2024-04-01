@@ -8,8 +8,9 @@ import { UserFollow } from '../../Follow/follow/entities/userfollow.entities';
 @Module({
     imports: [
         TypeOrmModule.forFeature([DeviceToken,UserFollow]),
-      ],
+       ],
       providers: [NotificationService],
       controllers: [ PushNotificationsController],
+      exports:[NotificationService]
 })
 export class NotificationModule {}
