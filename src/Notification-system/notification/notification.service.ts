@@ -91,7 +91,26 @@ export class NotificationService {
         process.env.TWILIO_AUTH_TOKEN,
       );
       const message = await client.messages.create({
-        body: `${firstName} ${lastName} Like your Post `,
+        body: `${firstName} ${lastName} Comment your Post `,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: '+917505234970',
+      });
+      return message;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async commentReplySendNotifications(data: any) {
+    const { firstName, lastName } = data;
+    try {
+      const client = twilio(
+        process.env.TWILIO_ACCOUNT_SID,
+        process.env.TWILIO_AUTH_TOKEN,
+      );
+      const message = await client.messages.create({
+        body: `${firstName} ${lastName} Reply your  Comment `,
         from: process.env.TWILIO_PHONE_NUMBER,
         to: '+917505234970',
       });
