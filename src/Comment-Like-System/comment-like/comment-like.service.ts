@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CommentEntities } from './Comment-like-Entities/comment-like.entities';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -40,6 +40,16 @@ export class CommentLikeService {
         comment: comment,
       });
       return 'Your comment has been successfully added';
+    }
+  }
+
+
+  async delete(id:any){
+    const result= await this.commentlikeRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException('Could not find Comment.');
+    }else{
+      return result
     }
   }
 }

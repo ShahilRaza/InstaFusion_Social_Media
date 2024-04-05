@@ -1,4 +1,3 @@
-import { type } from 'os';
 import { CaptionEntities } from '../../../Post-system/PostEntities/caption.entities';
 import { User } from 'src/enitties/user.entities';
 import {
@@ -14,6 +13,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
+import { CommentReplyEntities } from './coment-reply-Entities';
 
 @Entity({ name: 'CommentEntities' })
 export class CommentEntities {
@@ -22,6 +22,9 @@ export class CommentEntities {
 
   @Column({ name: 'userId' })
   userId: string;
+
+  @Column({ name: 'captionId' })
+  captionId: string;
 
   @CreateDateColumn({ name: 'createDateTime' })
   createDateTime: Date;
@@ -34,6 +37,9 @@ export class CommentEntities {
   user?: User;
 
   @ManyToOne(() => CaptionEntities, (caption) => caption.comments)
-  @JoinColumn({ name: 'postId' })
+  @JoinColumn({ name: 'captionId' })
   caption?: CaptionEntities;
+
+  @OneToMany(() => CommentReplyEntities, reply => reply.comment)
+  replies: CommentReplyEntities[];
 }
