@@ -103,14 +103,33 @@ export class NotificationService {
 
 
   async commentReplySendNotifications(data: any) {
-    const { firstName, lastName } = data;
+    const { firstName, lastName,commentReply } = data;
     try {
       const client = twilio(
         process.env.TWILIO_ACCOUNT_SID,
         process.env.TWILIO_AUTH_TOKEN,
       );
       const message = await client.messages.create({
-        body: `${firstName} ${lastName} Reply your  Comment `,
+        body: `${firstName} ${lastName} reply your comment ${commentReply} `,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to: '+917505234970',
+      });
+      return message;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+
+  async LikeSendNotifications(data: any) {
+    const { firstName, lastName} = data;
+    try {
+      const client = twilio(
+        process.env.TWILIO_ACCOUNT_SID,
+        process.env.TWILIO_AUTH_TOKEN,
+      );
+      const message = await client.messages.create({
+        body: `${firstName} ${lastName} Like your Post  `,
         from: process.env.TWILIO_PHONE_NUMBER,
         to: '+917505234970',
       });

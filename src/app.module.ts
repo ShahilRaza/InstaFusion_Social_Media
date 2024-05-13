@@ -15,7 +15,8 @@ import { FollowModule } from './Follow/follow/follow.module';
 import { NotificationModule } from './Notification-system/notification/notification.module';
 import { PostModule } from './Post-system/post/post.module';
 import { CommentLikeModule } from './Comment-Like-System/comment-like/comment-like.module';
-//import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './chat-app/chat/chat.module';
+import { ChatGatewayModule } from './chat-app/chat-getway/chat.getway.module';
 
 const transport = pino.transport({
   target: 'pino/file',  
@@ -50,6 +51,7 @@ const logger = pino(transport);
     NotificationModule,
     PostModule,
     CommentLikeModule,
+    ChatGatewayModule,
     LoggerModule.forRoot({
       pinoHttp: {
         logger,        

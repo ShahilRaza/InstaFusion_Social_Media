@@ -18,6 +18,9 @@ import { userprofileDto } from 'src/Profile/profile/profileDto/userprofile.dto';
 import { UserFollow } from 'src/Follow/follow/entities/userfollow.entities';
 import { CaptionEntities } from 'src/Post-system/PostEntities/caption.entities';
 import { CommentEntities } from 'src/Comment-Like-System/comment-like/Comment-like-Entities/comment-like.entities';
+import { LikeEntities } from '../Comment-Like-System/comment-like/Comment-like-Entities/like-entities';
+import { IndividualChatEntity } from 'src/chat-app/chat/chatEntities/chatentities';
+
 
 @Entity({ name: 'users' })
 export class User {
@@ -64,4 +67,16 @@ export class User {
 
   @OneToMany(()=>CommentEntities,(commentdata)=>commentdata)
   comments: CommentEntities[]
+
+
+  @ManyToOne(()=>LikeEntities,(like)=>like.users)
+  likes : LikeEntities[]
+
+  @OneToMany(()=>IndividualChatEntity,(chatData)=> chatData.sender)
+  senderChats : IndividualChatEntity
+
+  @OneToMany(()=>IndividualChatEntity,(chatData)=> chatData.receiver)
+  recevierChats : IndividualChatEntity
+
+
 }

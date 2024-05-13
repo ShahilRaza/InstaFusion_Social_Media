@@ -8,7 +8,8 @@ import { NotificationService } from '../../Notification-system/notification/noti
 import { DeviceToken } from '../../Notification-system/notification/entities/device-token.entity';
 import { UserFollow } from '../../Follow/follow/entities/userfollow.entities';
 import { User } from '../../enitties/user.entities';
-import { CommentReplyEntities } from './Comment-like-Entities/coment-reply-Entities';
+import { LikeEntities } from './Comment-like-Entities/like-entities';
+//import { CommentReplyEntities } from './Comment-like-Entities/coment-reply-Entities';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { CommentReplyEntities } from './Comment-like-Entities/coment-reply-Entit
       DeviceToken,
       UserFollow,
       User,
-      CommentReplyEntities
+      LikeEntities
+      //CommentReplyEntities
     ]),
   ],
   providers: [CommentLikeService, NotificationService],

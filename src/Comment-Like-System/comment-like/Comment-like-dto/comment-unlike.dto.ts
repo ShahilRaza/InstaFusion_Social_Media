@@ -10,24 +10,19 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class CommentLikeDto {
+export class unlikeLikeDto {
+
+
   @ApiProperty()
   @IsNotEmpty()
   @IsString()
-  userId: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsString()
-  captionId: string;
-
-  @ApiProperty({ type: 'text' })
-  @IsNotEmpty()
-  @IsString()
-  comment: string;
-
-
+  userId:string
+    
  
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  CaptionId:string
 
 
 }
