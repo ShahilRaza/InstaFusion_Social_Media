@@ -14,8 +14,8 @@ export class ChatController {
 
 
 
-   // @UseGuards(AuthGuard('jwt'))
-   // @ApiBearerAuth('access-token')
+   @UseGuards(AuthGuard('jwt'))
+   @ApiBearerAuth('access-token')
    @Post('/create')
    async create(@Body() data:IndividualChatsDto){
     return await this.chatService.createChat(data)
