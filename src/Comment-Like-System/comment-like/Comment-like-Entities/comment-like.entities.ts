@@ -13,7 +13,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { CommentReplyEntities } from './coment-reply-Entities';
+//import { CommentReplyEntities } from './coment-reply-Entities';
 
 @Entity({ name: 'CommentEntities' })
 export class CommentEntities {
@@ -32,6 +32,9 @@ export class CommentEntities {
   @Column({ type: 'text' })
   comment: string;
 
+  @Column({ name: 'parentCommentId', nullable: true })
+  parentCommentId?: string;
+
   @ManyToOne(() => User, (user) => user.comments)
   @JoinColumn({ name: 'userId' })
   user?: User;
@@ -40,6 +43,13 @@ export class CommentEntities {
   @JoinColumn({ name: 'captionId' })
   caption?: CaptionEntities;
 
-  @OneToMany(() => CommentReplyEntities, reply => reply.comment)
-  replies: CommentReplyEntities[];
+  @ManyToOne(()=>CommentEntities,(comment)=>comment.replies,{ onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'parentCommentId' })
+  parentComment?: CommentEntities;
+
+  @OneToMany(() => CommentEntities, (comment) => comment.parentComment)
+  replies: CommentEntities[];
+
+  
+
 }

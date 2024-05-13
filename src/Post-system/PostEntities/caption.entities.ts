@@ -10,13 +10,14 @@ import {
 import { PostMediaEntities } from './postmedia.entities';
 import { PostType } from './PostType.entities';
 import { CommentEntities } from '../../Comment-Like-System/comment-like/Comment-like-Entities/comment-like.entities';
+import { LikeEntities } from '../../Comment-Like-System/comment-like/Comment-like-Entities/like-entities';
 
 @Entity({ name: 'CaptionEntities' })
 export class CaptionEntities {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'createdDatetime', default: () => 'CURRENT_TIMESTAMP' }) // Set default value to CURRENT_TIMESTAMP
+  @Column({ name: 'createdDatetime', default: () => 'CURRENT_TIMESTAMP' }) 
   createdDatetime: Date;
 
   @Column({ name: 'createdByUserId' })
@@ -39,6 +40,9 @@ export class CaptionEntities {
   @JoinColumn({ name: 'postTypeId' })
   postType: PostType;
 
-  @OneToMany(()=>  CommentEntities , comment=>comment)
-  comments :CommentEntities[]
+  @ManyToOne(()=>  CommentEntities , comment=>comment)
+  comments?:CommentEntities
+
+  @ManyToOne(()=> LikeEntities,(like)=>like.captions)
+  likes?:LikeEntities
 }
