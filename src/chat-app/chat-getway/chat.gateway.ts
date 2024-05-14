@@ -18,8 +18,8 @@ import { ChatService } from '../chat/chat.service';
   },
 })
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
-  @WebSocketServer() server;
-  constructor(private chatGroupService: ChatService) {}
+  @WebSocketServer() server: Server;
+  constructor(private chatGroupService:  ChatService) {}
   handleConnection(client: any, ...args: any[]) {
     console.log('Client connected:', client.id);
   }
@@ -30,11 +30,14 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   @SubscribeMessage('chat')
   async handleMessage(client: Socket, chat: IndividualChatsDto) {
-      await this.chatGroupService.createChat(chat);
-      this.server.emit(chat.receiverId, chat.message);
+    await this.chatGroupService.createChat(chat);
+    this.server.emit(chat.receiverId, chat.message);
+    
   }
 
- 
-    
-  
+  @SubscribeMessage('reply')
+  async reply(client: Socket, chat: IndividualChatsDto) {
+    await this.chatGroupService.createChat(chat);
+    this.server.emit(chat.senderId, chat.message);
+  }
 }
