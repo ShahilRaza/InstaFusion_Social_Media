@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IndividualChatEntity } from './chatEntities/chatentities';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class ChatService {
@@ -62,22 +62,17 @@ export class ChatService {
   }
 
   async messagSeen(data: any) {
-    const { senderId, receiverId } = data;
-    const message = await this.chatRepository.findOne({
-      where: { sender: { id: senderId }, receiver: { id: receiverId } },
-      order: { sentAt: 'DESC' },
-    });
-    if (!message) {
-      throw new NotFoundException('Message not found');
-    } else {
-      message.seenByReceiver = true;
-      message.sentAt = new Date();
-      const seen = await this.chatRepository.save(message);
-      if (!seen) {
-        throw new NotFoundException('Message not Seen seen');
-      } else {
-        return seen;
-      }
+    const {messageId}=data
+    const updateResult = await this.chatRepository.update(
+        { id: In(messageId) }, 
+        { seenByReceiver: true} ,
+    );
+    if (updateResult.affected === 0) {
+        throw new NotFoundException('No messages found to update');
     }
+    return updateResult; 
   }
+
+
+
 }

@@ -46,4 +46,7 @@ export class ChatController {
   async messageSeen(@Body() data: MessageSeenDto) {
     return await this.chatService.messagSeen(data);
   }
+
+
+  /// send files 
 }

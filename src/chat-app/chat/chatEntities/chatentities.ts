@@ -6,6 +6,7 @@ import {
   Column,
   ManyToOne,
   CreateDateColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 
 @Entity('individual_chats')
@@ -24,6 +25,12 @@ export class IndividualChatEntity {
 
   @CreateDateColumn({ name: 'sent_at', type: 'timestamptz' })
   sentAt: Date;
+
+  @Column({nullable:true})
+  mediaFile: string;
+
+  @UpdateDateColumn({ nullable: true, type: 'timestamptz' }) 
+  seenAt: Date;
 
   @Column({ default: false })
   seenByReceiver: boolean;
