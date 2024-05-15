@@ -45,10 +45,10 @@ export class ChatService {
 
     async getChatParticular(data: any) {
         const { senderId, receiverId } = data;
-        const message = await this.chatRepository.findOne({
-            where: { sender: senderId, receiver: receiverId },
+        const message = await this.chatRepository.find({
+            where: { sender: { id: senderId }, receiver: { id: receiverId } },
             order: { sentAt: 'DESC' }
-        });
+          });
         if (!message) {
             throw new NotFoundException('Message not found');
         }
