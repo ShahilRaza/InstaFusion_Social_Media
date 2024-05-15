@@ -47,6 +47,5 @@ export class ChatController {
     return await this.chatService.messagSeen(data);
   }
 
-
-  /// send files 
+  /// send files
 }

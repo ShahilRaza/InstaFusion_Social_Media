@@ -62,17 +62,14 @@ export class ChatService {
   }
 
   async messagSeen(data: any) {
-    const {messageId}=data
+    const { messageId } = data;
     const updateResult = await this.chatRepository.update(
-        { id: In(messageId) }, 
-        { seenByReceiver: true} ,
+      { id: In(messageId) },
+      { seenByReceiver: true },
     );
     if (updateResult.affected === 0) {
-        throw new NotFoundException('No messages found to update');
+      throw new NotFoundException('No messages found to update');
     }
-    return updateResult; 
+    return updateResult;
   }
-
-
-
 }
