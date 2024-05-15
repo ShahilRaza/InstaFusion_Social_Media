@@ -7,12 +7,8 @@ import { HasMimeType, IsFile } from "nestjs-form-data";
 
 export class MessageSeenDto {
 
-    @ApiProperty({ required: false })
-    @IsString()
-    senderId?: string;
-    
-    @ApiProperty({ required: false })
-    @IsString()
-    receiverId?: string;
+  
+    @ApiProperty({ type: [String] })
+    messageId: string[];
 
   }
