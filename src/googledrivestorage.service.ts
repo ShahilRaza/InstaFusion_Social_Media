@@ -74,4 +74,28 @@ export class GoogleDriveService {
       return filerl;
     } catch (error) {}
   }
+
+
+
+  async chatFilesUpload(file: any) {
+    try {
+      const filemetaData = {
+        name: file.originalname,
+      };
+      const mediFiles = {
+        mimeType: file.mimetype,
+        body: stream.Readable.from(file.buffer),
+      };
+      const response = await this.drive.files.create({
+        resource: filemetaData,
+        media: mediFiles,
+        fields: 'id,webViewLink',
+      });
+      const fileId = response.data.id;
+      const filerl = response.data.webViewLink;
+      return filerl;
+    } catch (error) {}
+  }
+
+
 }
