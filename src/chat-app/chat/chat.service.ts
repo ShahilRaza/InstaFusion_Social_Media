@@ -8,12 +8,14 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { IndividualChatEntity } from './chatEntities/chatentities';
 import { In, Repository } from 'typeorm';
+import { GoogleDriveService } from '../../googledrivestorage.service';
 
 @Injectable()
 export class ChatService {
   constructor(
     @InjectRepository(IndividualChatEntity)
     private readonly chatRepository: Repository<IndividualChatEntity>,
+    private readonly googleDriveService: GoogleDriveService,
   ) {}
 
   async createChat(data: any) {
@@ -71,5 +73,15 @@ export class ChatService {
       throw new NotFoundException('No messages found to update');
     }
     return updateResult;
+  }
+
+
+  async uploadFile(data: any) {
+    const { files } = data;
+    const fileUploadPromises = files.map((item) =>
+      this.googleDriveService.chatFilesUpload(item)
+    );
+    const fileData = await Promise.all(fileUploadPromises);
+    return fileData;
   }
 }
